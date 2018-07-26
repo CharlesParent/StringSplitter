@@ -7,8 +7,8 @@
 
 int main()
 {
-    const char * string = "Another U2F device was used to register in this application. LONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONLONGLINGLINGLINGLINGLINGLINGLINGLION";
-    //const char * string = "Un autre appreil U2F a été utilisé pour s'enregister dans l'application";
+    //const char * string = "Another U2F device was used to register in this application. LONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONLONGLINGLINGLINGLINGLINGLINGLINGLION";
+    const char * string = "Un autre appreil U2F a été utilisé pour s'enregister dans l'application";
 
     printf("%s", string);
     printf("\r\n");
