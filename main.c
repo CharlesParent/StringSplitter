@@ -1,19 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 
-#define MAX_LENGTH_LINE 23
+#define MAX_LENGTH_LINE 22
+
+void firstImplem(const char *);
+void printLines(char lines[5][MAX_LENGTH_LINE]);
+void secondImplem(const char * stringToSplit, char lines [5][MAX_LENGTH_LINE]);
 
 int main()
 {
-    //const char * string = "Another U2F device was used to register in this application. LONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONGLONLONGLINGLINGLINGLINGLINGLINGLINGLION";
-    const char * string = "Un autre appreil U2F a été utilisé pour s'enregister dans l'application";
+    //const char * string = "Another U2F device was used to register in this application.";
+    //const char * string = "Un autre appreil U2F a été utilisé pour s'enregister dans l'application";
 
-    printf("%s", string);
-    printf("\r\n");
-    printf("length of string is %d.\r\n", (int)strlen(string));
+    //const char * string = "Do you really want to change the home screen?";
+    const char * string = "Voulez-vous vraiment changer l'écran d'accueil pour ce magnifique écran de la mort qui tue sa maman ???";
 
+    char stringToSplit[strlen(string) + 1];
+    strcpy(stringToSplit, string);
+    
+
+    char lines[5][MAX_LENGTH_LINE] = {0};
+
+    secondImplem(stringToSplit, lines);
+
+    return 0;
+}
+
+void secondImplem(const char * stringToSplit, char lines [5][MAX_LENGTH_LINE]) {
+    int maxLines = 5;
+    int start = 0;
+    int lineNumber = 0;
+    int index = MAX_LENGTH_LINE;
+    while(index < (int) strlen(stringToSplit)) {
+        while(strncmp(&stringToSplit[index], " ", 1)) {
+            index -= 1;
+        }
+        strncpy(lines[lineNumber], &stringToSplit[start], index - start + 1);
+        start = index + 1;
+        index += MAX_LENGTH_LINE;
+        printf("Line number %d is : %s\n", lineNumber, lines[lineNumber]);
+        if (lineNumber == maxLines - 1 ) break; 
+        lineNumber += 1;
+        printf("lineNumber is %d\n", lineNumber);
+
+    }
+    
+    if (strlen(lines[lineNumber]) + strlen(&stringToSplit[start]) < MAX_LENGTH_LINE) {
+        strcat(lines[lineNumber], &stringToSplit[start]);
+    } else if (lineNumber < maxLines - 1) {
+        strcpy(lines[lineNumber + 1], &stringToSplit[start]);
+    }
+    printLines(lines);
+}
+
+void firstImplem(const char * string) {
     char stringToSplit[strlen(string) + 1];
     char firstLine[MAX_LENGTH_LINE] = "";
 
@@ -46,9 +89,12 @@ int main()
 
         strcpy(stringToSplit, ret + 1);
     }
+    printLines(lines);
+};
+
+void printLines(char lines[5][MAX_LENGTH_LINE]){
+    printf("%c", lines[0][0]);
     for(int i = 0; i < 5; i++)
-    {
-        printf("Line Number %d is: %s\r\n", i+1, (char *) lines[i]);
-    }
-    return 0;
+        printf(lines[i]);
+        //printf("Line Number %d is: %s\r\n", i+1, (char *) lines[i]);
 }
