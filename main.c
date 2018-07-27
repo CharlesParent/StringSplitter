@@ -10,6 +10,8 @@ void firstImplem(const char *);
 void printLines(char lines[5][MAX_LENGTH_LINE]);
 void secondImplem(const char * stringToSplit, char lines [5][MAX_LENGTH_LINE]);
 
+#define PIXEL_LINE_WIDTH 100
+
 int main()
 {
     //const char * string = "Another U2F device was used to register in this application.";
@@ -24,7 +26,33 @@ int main()
 
     char lines[5][MAX_LENGTH_LINE] = {0};
 
-    secondImplem(stringToSplit, lines);
+    int lineIndex = 0;
+
+    int maxLines = 5;
+	int wordPixelLen = 0;
+	int linePixelLen = 0;
+    int start = 0;
+
+	for(int i = 0; i < (int) strlen(stringToSplit); i++)
+	{
+		wordPixelLen += 2 + 1;
+		if (strncmp(&stringToSplit[i], " ", 1) == 0) {
+			if(linePixelLen + wordPixelLen <= PIXEL_LINE_WIDTH) {
+				strncat(lines[lineIndex], &stringToSplit[start], (int) (strlen(&stringToSplit[start]) - strlen(&stringToSplit[i]) + 1));
+				linePixelLen += wordPixelLen;
+				wordPixelLen = 0;
+			} else if (lineIndex < maxLines - 1) {
+				lineIndex++;
+				linePixelLen = wordPixelLen;
+				wordPixelLen = 0;
+				strncat(lines[lineIndex], &stringToSplit[start], (int) (strlen(&stringToSplit[start]) - strlen(&stringToSplit[i]) + 1));
+			}
+            start = i + 1;
+		} else {
+			wordPixelLen += 2 + 1;
+		}
+    }
+    printLines(lines);
 
     return 0;
 }
@@ -89,12 +117,10 @@ void firstImplem(const char * string) {
 
         strcpy(stringToSplit, ret + 1);
     }
-    printLines(lines);
+    //printLines(lines);
 };
 
 void printLines(char lines[5][MAX_LENGTH_LINE]){
-    printf("%c", lines[0][0]);
     for(int i = 0; i < 5; i++)
-        printf(lines[i]);
-        //printf("Line Number %d is: %s\r\n", i+1, (char *) lines[i]);
+        printf("Line Number %d is: %s\r\n", i+1, (char *) lines[i]);
 }
