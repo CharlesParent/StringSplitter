@@ -4,13 +4,15 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define MAX_LENGTH_LINE 22
+#include "fonts.h"
+
+#define MAX_LENGTH_LINE 50
 
 void firstImplem(const char *);
 void printLines(char lines[5][MAX_LENGTH_LINE]);
 void secondImplem(const char * stringToSplit, char lines [5][MAX_LENGTH_LINE]);
 
-#define PIXEL_LINE_WIDTH 100
+#define PIXEL_LINE_WIDTH 109
 
 int main()
 {
@@ -32,24 +34,33 @@ int main()
 	int wordPixelLen = 0;
 	int linePixelLen = 0;
     int start = 0;
-
-	for(int i = 0; i < (int) strlen(stringToSplit); i++)
+    printf("Word pixel length is %d\n", wordPixelLen);
+	for(int i = 0; i < (int) strlen(string); i++)
 	{
-		wordPixelLen += 2 + 1;
-		if (strncmp(&stringToSplit[i], " ", 1) == 0) {
+		char currentChar = string[i];
+        printf("char is %c\n", currentChar);
+        wordPixelLen = wordPixelLen + fontCharWidth(FONT_STANDARD & 0x7f, currentChar) + 1;
+        //printf("Current char is %c and its pixel lentgh is %d\n", currentChar, fontCharWidth(FONT_STANDARD & 0x7f, currentChar) + 1);
+        //printf("Word pixel length is %d\n", wordPixelLen);
+		if (strncmp(&string[i+1], " ", 1) == 0 || strncmp(&string[i+1], "\0", 1) == 0) {
 			if(linePixelLen + wordPixelLen <= PIXEL_LINE_WIDTH) {
-				strncat(lines[lineIndex], &stringToSplit[start], (int) (strlen(&stringToSplit[start]) - strlen(&stringToSplit[i]) + 1));
+				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start]) - strlen(&string[i+1])));
+                //printf("printing part of line pixel %d\n", wordPixelLen);
 				linePixelLen += wordPixelLen;
 				wordPixelLen = 0;
+                printf("Line is currently \"%s\" and its size %d\n", lines[lineIndex], linePixelLen);
+                start = i+1;
+                printf("Start position is now %d\n", start);
 			} else if (lineIndex < maxLines - 1) {
+                printf("Generated Lines is \"%s\" and its length is %d\n", lines[lineIndex], linePixelLen);
 				lineIndex++;
 				linePixelLen = wordPixelLen;
 				wordPixelLen = 0;
-				strncat(lines[lineIndex], &stringToSplit[start], (int) (strlen(&stringToSplit[start]) - strlen(&stringToSplit[i]) + 1));
+				strncat(lines[lineIndex], &string[start + 1], (int) (strlen(&string[start + 1]) - strlen(&string[i+1])));
+                printf("Line is currently \"%s\" and its size %d\n", lines[lineIndex], linePixelLen);
+                start = i+1;
+                printf("Start position is now %d\n", start);
 			}
-            start = i + 1;
-		} else {
-			wordPixelLen += 2 + 1;
 		}
     }
     printLines(lines);
@@ -86,7 +97,6 @@ void secondImplem(const char * stringToSplit, char lines [5][MAX_LENGTH_LINE]) {
 
 void firstImplem(const char * string) {
     char stringToSplit[strlen(string) + 1];
-    char firstLine[MAX_LENGTH_LINE] = "";
 
     char **lines;
     lines = (char **) calloc(5 * sizeof(char *), sizeof(char*));
