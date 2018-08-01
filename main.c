@@ -20,11 +20,16 @@ int main()
     //const char * string = "Un autre appreil U2F a été utilisé pour s'enregister dans l'application";
 
     //const char * string = "Do you really want to change the home screen?";
-    const char * string = "Voulez-vous vraiment changer l'écran d'accueil pour ce magnifique écran de la mort qui tue sa maman ???";
-
-    char stringToSplit[strlen(string) + 1];
-    strcpy(stringToSplit, string);
+    //const char * string = "Voulez-vous vraiment changer l'\xe9""cran d'accueil pour ce magnifique \xe9""cran de la mort qui tue sa maman ???";
     
+    char tx_value[32] = "0.008";
+	char gas_value[32] = "0.00000017";
+
+    const char* stringVar = "Really send %s paying up to %s for gas?";
+
+    char string[5*MAX_LENGTH_LINE];
+
+    sprintf(string, stringVar, tx_value, gas_value);
 
     char lines[5][MAX_LENGTH_LINE] = {0};
 
@@ -38,28 +43,19 @@ int main()
 	for(int i = 0; i < (int) strlen(string); i++)
 	{
 		char currentChar = string[i];
-        printf("char is %c\n", currentChar);
         wordPixelLen = wordPixelLen + fontCharWidth(FONT_STANDARD & 0x7f, currentChar) + 1;
-        //printf("Current char is %c and its pixel lentgh is %d\n", currentChar, fontCharWidth(FONT_STANDARD & 0x7f, currentChar) + 1);
-        //printf("Word pixel length is %d\n", wordPixelLen);
-		if (strncmp(&string[i+1], " ", 1) == 0 || strncmp(&string[i+1], "\0", 1) == 0) {
+        if (strncmp(&string[i+1], " ", 1) == 0 || strncmp(&string[i+1], "\0", 1) == 0) {
 			if(linePixelLen + wordPixelLen <= PIXEL_LINE_WIDTH) {
 				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start]) - strlen(&string[i+1])));
-                //printf("printing part of line pixel %d\n", wordPixelLen);
 				linePixelLen += wordPixelLen;
 				wordPixelLen = 0;
-                printf("Line is currently \"%s\" and its size %d\n", lines[lineIndex], linePixelLen);
                 start = i+1;
-                printf("Start position is now %d\n", start);
 			} else if (lineIndex < maxLines - 1) {
-                printf("Generated Lines is \"%s\" and its length is %d\n", lines[lineIndex], linePixelLen);
 				lineIndex++;
 				linePixelLen = wordPixelLen;
 				wordPixelLen = 0;
 				strncat(lines[lineIndex], &string[start + 1], (int) (strlen(&string[start + 1]) - strlen(&string[i+1])));
-                printf("Line is currently \"%s\" and its size %d\n", lines[lineIndex], linePixelLen);
                 start = i+1;
-                printf("Start position is now %d\n", start);
 			}
 		}
     }
