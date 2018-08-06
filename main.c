@@ -22,14 +22,18 @@ int main()
     //const char * string = "Do you really want to change the home screen?";
     //const char * string = "Voulez-vous vraiment changer l'\xe9""cran d'accueil pour ce magnifique \xe9""cran de la mort qui tue sa maman ???";
     
-    char tx_value[32] = "0.008";
-	char gas_value[32] = "0.00000017";
+    // char tx_value[32] = "0.008";
+	// char gas_value[32] = "0.00000017";
 
-    const char* stringVar = "Really send %s paying up to %s for gas?";
+    // const char* stringVar = "Really send %s paying up to %s for gas?";
 
-    char string[5*MAX_LENGTH_LINE];
+    // char string[5*MAX_LENGTH_LINE];
 
-    sprintf(string, stringVar, tx_value, gas_value);
+    // sprintf(string, stringVar, tx_value, gas_value);
+
+    char* string;
+    printf("Please enter a string to see if it fits in splitted lines:\n");
+    gets(string);
 
     char lines[5][MAX_LENGTH_LINE] = {0};
 
