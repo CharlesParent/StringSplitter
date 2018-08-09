@@ -11,57 +11,64 @@
 void firstImplem(const char *);
 void printLines(char lines[5][MAX_LENGTH_LINE]);
 void secondImplem(const char * stringToSplit, char lines [5][MAX_LENGTH_LINE]);
+int test_string(const char * string);
+#define PIXEL_LINE_WIDTH 110
+#define LINES_ON_SCREEN 6
 
-#define PIXEL_LINE_WIDTH 109
+int main(){
+    test_string("Another U2F device was used to register in this application.");
+    test_string("Un autre appreil U2F a été utilisé pour s'enregister dans l'application");
+    test_string("Do you really want to change language to FR ?");
+    test_string("Do you really want to change the home screen?");
+    test_string("Le chargement d'une graine privée n'est pas recommandé. Continuer si seulement vous savez ce que vous faites!");
+    test_string("Voulez-vous vraiment changer l'écran d'accueil?");
+    test_string("Voulez-vous vraiment changer l'écran d'accueil? En vrai il est vraiment cool celui-là je comprends pas pourquoi vous voulez pas le garder srx !!");
+}
 
-int main()
+
+int test_string(const char * string)
 {
-    //const char * string = "Another U2F device was used to register in this application.";
-    //const char * string = "Un autre appreil U2F a été utilisé pour s'enregister dans l'application";
-
-    //const char * string = "Do you really want to change the home screen?";
-    //const char * string = "Voulez-vous vraiment changer l'\xe9""cran d'accueil pour ce magnifique \xe9""cran de la mort qui tue sa maman ???";
-    
-    // char tx_value[32] = "0.008";
-	// char gas_value[32] = "0.00000017";
-
-    // const char* stringVar = "Really send %s paying up to %s for gas?";
-
     // char string[5*MAX_LENGTH_LINE];
 
     // sprintf(string, stringVar, tx_value, gas_value);
 
-    char* string;
-    printf("Please enter a string to see if it fits in splitted lines:\n");
-    gets(string);
+    // char* string;
+    // printf("Please enter a string to see if it fits in splitted lines:\n");
+    // gets(string);
 
-    char lines[5][MAX_LENGTH_LINE] = {0};
-
+    char lines[6][MAX_LENGTH_LINE] = {0};
+    char c;
     int lineIndex = 0;
 
-    int maxLines = 5;
 	int wordPixelLen = 0;
 	int linePixelLen = 0;
     int start = 0;
-    printf("Word pixel length is %d\n", wordPixelLen);
-	for(int i = 0; i < (int) strlen(string); i++)
-	{
-		char currentChar = string[i];
-        wordPixelLen = wordPixelLen + fontCharWidth(FONT_STANDARD & 0x7f, currentChar) + 1;
-        if (strncmp(&string[i+1], " ", 1) == 0 || strncmp(&string[i+1], "\0", 1) == 0) {
+    int end = 0;
+    for(int i = 0; i <= (int) strlen(string); i++) {
+		if (string[i] == ' ' || string[i] == '\0' || string[i] == '\n') {
 			if(linePixelLen + wordPixelLen <= PIXEL_LINE_WIDTH) {
-				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start]) - strlen(&string[i+1])));
 				linePixelLen += wordPixelLen;
-				wordPixelLen = 0;
-                start = i+1;
-			} else if (lineIndex < maxLines - 1) {
+			} else {
+				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start]) - strlen(&string[end])));
+				start = end + 1;
+				if (lineIndex < LINES_ON_SCREEN - 1) {
 				lineIndex++;
 				linePixelLen = wordPixelLen;
-				wordPixelLen = 0;
-				strncat(lines[lineIndex], &string[start + 1], (int) (strlen(&string[start + 1]) - strlen(&string[i+1])));
-                start = i+1;
+				} else
+					break;
 			}
+			end = i;
+			wordPixelLen = 0;
+			if(string[i] == '\n' && lineIndex < LINES_ON_SCREEN - 1) {
+				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start]) - strlen(&string[end])));
+				start = i + 1;
+				lineIndex++;
+				linePixelLen = 0;
+			}
+			if(string[i] == '\0')
+				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start])));
 		}
+		wordPixelLen += fontCharWidth(FONT_STANDARD & 0x7f, string[i]) + 1;
     }
     printLines(lines);
 
@@ -130,7 +137,8 @@ void firstImplem(const char * string) {
     //printLines(lines);
 };
 
-void printLines(char lines[5][MAX_LENGTH_LINE]){
-    for(int i = 0; i < 5; i++)
-        printf("Line Number %d is: %s\r\n", i+1, (char *) lines[i]);
+void printLines(char lines[6][MAX_LENGTH_LINE]){
+    for(int i = 0; i < 6; i++)
+        printf("Line Number %d is:%s\r\n", i+1, (char *) lines[i]);
+    printf("\n");
 }
