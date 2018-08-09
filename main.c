@@ -7,7 +7,8 @@
 #include "fonts.h"
 
 #define MAX_LENGTH_LINE 50
-#define PIXEL_LINE_WIDTH 110
+// Pixel line is 128 - 20  (icon needs 16 pixels + 4 pixels space)
+#define PIXEL_LINE_WIDTH 108
 #define LINES_ON_SCREEN 6
 
 void printLines(char lines[5][MAX_LENGTH_LINE]);
